@@ -34,6 +34,12 @@ float x;
 float y;
 float speed = 5;
 
+//enemy
+float spacingX;
+float spacingY;
+float x1, x2, x3, y1, y2, y3;
+int m=1;
+
 boolean 
  upPressed = false,
  downPressed = false,
@@ -55,6 +61,15 @@ void setup () {
   start1Img = loadImage("img/start1.png");
   start2Img = loadImage("img/start2.png");
   treasureImg = loadImage("img/treasure.png");
+  //enemy
+  spacingX = 70;
+  spacingY = 70;
+  x1 = 0;
+  x2 = 0;
+  x3 = 0; 
+  y1 = random(40,430);
+  y1 = y2;
+  
 }
 
 void draw() {
@@ -91,48 +106,53 @@ void draw() {
     
     image(hpImg, 10, 10);
 
-    float spacingX = 70;
-    float spacingY = 70;
-    float x1 = 0,x2 = 0, x3 = 0, y1 =random(40,height) , y2 =1/2*height, y3 =200;
+  if(m%3==1)
+    {
+      for(int i=1;i<6;i++)
+      {
+        image(enemyImg,(x1++)-i*50,y1);
+        x1%=890;
+      }
+    }
+    if(m%3==2)
+    {
+      for(int i=1;i<6;i++)
+      {
+        image(enemyImg,(x1++)-i*50,y1+i*50);
+        x1 %= 890;
+      }
+    }
+    if(m%3==0)
+    {
+      for(int i=0;i<5;i++)
+      {
+        if(i<3)
+        {
+          image(enemyImg,(x1++)-i*50,y1-i*50);
+          image(enemyImg,(x1++)-i*50,y2+i*50);
+          x1 %= 890;
+        }
+        if(i>2&&i<4)
+        {
+          image(enemyImg,(x1++)-i*50,y1+50);
+          image(enemyImg,(x1++)-i*50,y2-50);
+          x1 %= 890;
+        }
+        if(i>3)
+        {
+          image(enemyImg,(x1++)-i*50,y1);
+          x1 %= 890;
+        }
+      }
+    }
+    if(x1>882)
+    {
+      m++;
+      y1 = random(120,197);
+      y2 = y1;
+    }    
     
- switch(enemyWave){    
- case FIRST_WAVE:        
- for(int i=0;i<5;i++){
- x1=spacingX*i;
- image(enemyImg,x1,y1);
- x1 += speed;
- if(x1 >= width)
- {enemyWave = SECOND_WAVE;}  
- }
- break;
- 
- case SECOND_WAVE:  
- for(int j=0;j<5;j++){
- x2=spacingX*j; 
- image(enemyImg,x2,y2);
- y2-= spacingY;
- x2 += speed;
- if(x2 >= width)
- {enemyWave = THIRD_WAVE;}  
- }
- break;
- 
- case THIRD_WAVE:  
- for(int k=0;k<3;k++){
- x3=spacingX*k;
- image(enemyImg,x3,y3);
- y3-= spacingY;
- image(enemyImg,x3,y3+210);
- y3+= spacingY;
- image(enemyImg,x3+190,y1-140); 
- y3+= spacingY;
- image(enemyImg,x3+190,y1-70);  
- y3-= spacingY;
- if(x3 >= width)
- {enemyWave = FIRST_WAVE;}  
- }  
- break;  
- }  
+
      
     image(fighterImg, x, y);
     if (upPressed) {
@@ -149,20 +169,20 @@ void draw() {
     }
 
     // boundary detection
-    if (x > width) {
-      x = 0;
+    if (x > 590) {
+      x = 590;
     }
     if (x < 0) {
-      x = width;
+      x = 0;
     }
-    if (y > height) {
-      y = 0;
+    if (y > 430) {
+      y = 430;
     }
     if (y < 0) {
-      y = height;
+      y = 0;
     }
     if (x >= a-30 &&  x <= a+30 && y >= b-30 && y <=b+30){
-      d = d+20;
+      d = d+40;
       a=floor(random(420));
       b=floor(random(400));
     }
@@ -172,8 +192,6 @@ void draw() {
     }
     
     if (x >= c-50 &&  x <= c+50 && y >= 100 && y <=200){ 
-      x = width/2;
-      y = height/2;
       d = d-40;
       c = 0;
     }
